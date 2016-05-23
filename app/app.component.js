@@ -1,14 +1,7 @@
 (function(app) {
-  //hero class, should be moved later and imported here
 
-  var Hero =
-    ng.core.Class({
-      constructor: function(id, name) {
-        this.id =  id;
-        this.name = name;
-      }
-    });
-
+  //a-la import hero
+  var Hero = app.Hero;
 
   app.AppComponent =
     ng.core.Component({
@@ -25,15 +18,9 @@
             </li>
           </ul>
 
-          <div *ngIf="selectedHero">
-            <h2>{{selectedHero.name}} details:</h2>
-            <div><label>id: </label>{{selectedHero.id}}</div>
-            <div>
-              <label>name: </label>
-              <input [(ngModel)]="selectedHero.name" placeholder="name">
-            </div>
-          </div>
-          `
+          <my-hero-detail [hero]="selectedHero"></my-hero-detail>
+          `,
+        directives: [app.HeroDetailComponent]
       })
       .Class({
         constructor: function() {
@@ -43,7 +30,6 @@
         },
         onSelect: function(hero) {
           this.selectedHero = hero;
-          console.log(hero);
         }
       });
 
