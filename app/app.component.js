@@ -1,8 +1,5 @@
 (function(app) {
 
-  //a-la import hero
-  var Hero = app.Hero;
-
   app.AppComponent =
     ng.core.Component({
         selector: 'my-app',
@@ -20,27 +17,30 @@
 
           <my-hero-detail [hero]="selectedHero"></my-hero-detail>
           `,
-        directives: [app.HeroDetailComponent]
+        directives: [app.HeroDetailComponent],
+        providers: [app.HeroService]
       })
       .Class({
-        constructor: function() {
+        constructor: [app.HeroService, function(heroService) {
           this.title =  'Tour of Heroes';
-          this.heroes = heroes;
           this.selectedHero = null;
-        },
+          this.heroService = heroService;
+        }],
         onSelect: function(hero) {
           this.selectedHero = hero;
+        },
+        getHeroes: function() {
+          this.heroService.getHeroes()
+            .then(function(heroes) {
+              this.heroes = heroes;
+            }.bind(this))
+            .catch(function(error) {
+              console.log(error);
+            });
+        },
+        ngOnInit: function() {
+          this.getHeroes();
         }
       });
-
-  var heroes = [
-    new Hero(10, 'Mr. First'),
-    new Hero(11, 'Mr. Second'),
-    new Hero(12, 'Ms. Third'),
-    new Hero(13, 'Rocket'),
-    new Hero(14, 'Star Lord'),
-    new Hero(15, 'Groot'),
-    new Hero(16, 'Mantis')
-  ];
 
 })(window.app || (window.app = {}));
